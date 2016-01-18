@@ -1,6 +1,7 @@
 # snippets
 Useful code snippets
 
+## RegEx
 `let regex: RegEx = "he"`
 
 `regex.match("hello")          // true`
