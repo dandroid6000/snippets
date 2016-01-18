@@ -7,17 +7,21 @@
 //
 
 struct RegEx {
-    let pattern: String
-    let options: NSRegularExpressionOptions
-    
-    private lazy var matcher: NSRegularExpression? = try? NSRegularExpression(pattern: self.pattern, options: self.options)
-    
-    init(pattern: String, options: NSRegularExpressionOptions = []) {
-        self.pattern = pattern
-        self.options = options
+    var pattern: String? {
+        return self.matcher?.pattern
     }
     
-    mutating func match(string: String, options: NSMatchingOptions = []) -> Bool {
+    var options: NSRegularExpressionOptions? {
+        return self.matcher?.options
+    }
+    
+    private let matcher: NSRegularExpression?
+    
+    init(pattern: String, options: NSRegularExpressionOptions = []) {
+        self.matcher = try? NSRegularExpression(pattern: pattern, options: options)
+    }
+    
+    func match(string: String, options: NSMatchingOptions = []) -> Bool {
         if let matcher = self.matcher {
             return matcher.numberOfMatchesInString(string, options: options, range: NSMakeRange(0, string.characters.count)) > 0
         }
@@ -30,18 +34,15 @@ extension RegEx: StringLiteralConvertible {
     typealias UnicodeScalarLiteralType = StringLiteralType
 
     init(unicodeScalarLiteral value: UnicodeScalarLiteralType) {
-        self.pattern = "\(value)"
-        self.options = []
+        self.init(pattern: "\(value)", options: [])
     }
     
     init(extendedGraphemeClusterLiteral value: ExtendedGraphemeClusterLiteralType) {
-        self.pattern = value
-        self.options = []
+        self.init(pattern: value, options: [])
     }
     
     init(stringLiteral value: StringLiteralType) {
-        self.pattern = value
-        self.options = []
+        self.init(pattern: value, options: [])
     }
 }
 
